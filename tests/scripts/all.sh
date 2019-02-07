@@ -119,6 +119,7 @@ pre_initialize_variables () {
     MEMORY=0
     FORCE=0
     KEEP_GOING=0
+    CTEST_OUTPUT_ON_FAILURE=1
 
     # Default commands, can be overriden by the environment
     : ${OPENSSL:="openssl"}
