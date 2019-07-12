@@ -5768,15 +5768,30 @@ psa_status_t psa_generate_key( const psa_key_attributes_t *attributes,
     psa_status_t status;
     psa_key_slot_t *slot = NULL;
     psa_se_drv_table_entry_t *driver = NULL;
-    status = psa_start_key_creation( attributes, handle, &slot, &driver );
 #if defined(MBEDTLS_PSA_CRYPTO_SE_C)
-    if( driver != NULL )
-    {
-        /* Generating a key in a secure element is not implemented yet. */
-        status = PSA_ERROR_NOT_SUPPORTED;
-    }
+    const psa_drv_se_t *drv;
+    psa_drv_se_context_t *drv_context;
 #endif /* MBEDTLS_PSA_CRYPTO_SE_C */
-    if( status == PSA_SUCCESS )
+
+    status = psa_start_key_creation( attributes, handle, &slot, &driver );
+    if( status != PSA_SUCCESS )
+        goto exit;
+#if defined(MBEDTLS_PSA_CRYPTO_SE_C)
+    if( psa_get_se_driver( slot->lifetime, &drv, &drv_context ) )
+    {
+        if( drv->key_management == NULL ||
+            drv->key_management->p_generate == NULL )
+        {
+            status = PSA_ERROR_NOT_SUPPORTED;
+            goto exit;
+        }
+        status = drv->key_management->p_generate(
+            drv_context,
+            slot->data.se.slot_number, slot->type, slot->policy.usage,
+            attributes->bits, NULL, 0, NULL);
+    }
+    else
+#endif /* MBEDTLS_PSA_CRYPTO_SE_C */
     {
         status = psa_generate_key_internal(
             slot, attributes->bits,
@@ -5784,6 +5799,7 @@ psa_status_t psa_generate_key( const psa_key_attributes_t *attributes,
     }
     if( status == PSA_SUCCESS )
         status = psa_finish_key_creation( slot, driver );
+exit:
     if( status != PSA_SUCCESS )
     {
         psa_fail_key_creation( slot, driver );
