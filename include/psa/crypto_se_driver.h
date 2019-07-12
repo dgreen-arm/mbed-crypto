@@ -935,7 +935,7 @@ typedef psa_status_t (*psa_drv_se_export_key_t)(psa_drv_se_context_t *drv_contex
  * \param[in] bits              The size in bits of the key to be generated.
  * \param[in] extra             Extra parameters for key generation. The
  *                              interpretation of this parameter should match
- *                              the interpretation in the `extra` parameter is
+ *                              the interpretation in the `extra` parameter in
  *                              the `psa_generate_key` function
  * \param[in] extra_size        The size in bytes of the \p extra buffer
  * \param[out] p_pubkey_out     The buffer where the public key information will
