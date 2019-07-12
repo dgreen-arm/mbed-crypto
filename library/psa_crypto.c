@@ -1697,6 +1697,8 @@ psa_status_t psa_import_key( const psa_key_attributes_t *attributes,
             slot->data.se.slot_number,
             slot->lifetime, slot->type, slot->policy.alg, slot->policy.usage,
             data, data_length );
+        if( status != PSA_SUCCESS )
+            goto exit;
         /* TOnogrepDO: psa_check_key_slot_attributes? */
     }
     else
