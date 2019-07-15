@@ -11,7 +11,6 @@ static struct
     psa_key_type_t type;
     psa_key_usage_t usage;
     size_t bits;
-    size_t extra_size;
     size_t pubkey_out_size;
     psa_status_t return_value;
 } mock_generate_data;
@@ -94,14 +93,11 @@ static psa_status_t mock_generate( psa_drv_se_context_t *context,
                                    psa_key_type_t type,
                                    psa_key_usage_t usage,
                                    size_t bits,
-                                   const void *extra,
-                                   size_t extra_size,
                                    uint8_t *p_pubkey_out,
                                    size_t pubkey_out_size,
                                    size_t *p_pubkey_length )
 {
     (void) context;
-    (void) extra;
     (void) p_pubkey_out;
     (void) p_pubkey_length;
 
@@ -110,7 +106,6 @@ static psa_status_t mock_generate( psa_drv_se_context_t *context,
     mock_generate_data.type = type;
     mock_generate_data.usage = usage;
     mock_generate_data.bits = bits;
-    mock_generate_data.extra_size = extra_size;
     mock_generate_data.pubkey_out_size = pubkey_out_size;
 
     return( mock_generate_data.return_value );
