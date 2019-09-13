@@ -795,6 +795,7 @@ static int rsa_prepare_blinding( mbedtls_rsa_context *ctx,
 
     /* Blinding value: Vi =  Vf^(-e) mod N */
     MBEDTLS_MPI_CHK( mbedtls_mpi_inv_mod( &ctx->Vi, &ctx->Vf, &ctx->N ) );
+    printf("%s - %d\n", __FILE__, __LINE__);
     MBEDTLS_MPI_CHK( mbedtls_mpi_exp_mod( &ctx->Vi, &ctx->Vi, &ctx->E, &ctx->N, &ctx->RN ) );
 
 
@@ -923,6 +924,7 @@ int mbedtls_rsa_private( mbedtls_rsa_context *ctx,
          * Blinding
          * T = T * Vi mod N
          */
+        printf("%s - %d\n", __FILE__, __LINE__);
         MBEDTLS_MPI_CHK( rsa_prepare_blinding( ctx, f_rng, p_rng ) );
         MBEDTLS_MPI_CHK( mbedtls_mpi_mul_mpi( &T, &T, &ctx->Vi ) );
         MBEDTLS_MPI_CHK( mbedtls_mpi_mod_mpi( &T, &T, &ctx->N ) );
@@ -2078,6 +2080,7 @@ int mbedtls_rsa_rsassa_pkcs1_v15_sign( mbedtls_rsa_context *ctx,
         return( MBEDTLS_ERR_MPI_ALLOC_FAILED );
     }
 
+    printf("%s - %d\n", __FILE__, __LINE__);
     MBEDTLS_MPI_CHK( mbedtls_rsa_private( ctx, f_rng, p_rng, sig, sig_try ) );
     MBEDTLS_MPI_CHK( mbedtls_rsa_public( ctx, sig_try, verif ) );
 
@@ -2121,8 +2124,11 @@ int mbedtls_rsa_pkcs1_sign( mbedtls_rsa_context *ctx,
     {
 #if defined(MBEDTLS_PKCS1_V15)
         case MBEDTLS_RSA_PKCS_V15:
+        {
+            printf("%s - %d\n", __FILE__, __LINE__);
             return mbedtls_rsa_rsassa_pkcs1_v15_sign( ctx, f_rng, p_rng, mode, md_alg,
                                               hashlen, hash, sig );
+        }
 #endif
 
 #if defined(MBEDTLS_PKCS1_V21)

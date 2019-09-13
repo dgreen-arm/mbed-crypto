@@ -1629,6 +1629,7 @@ static mbedtls_mpi_uint mbedtls_int_div_int( mbedtls_mpi_uint u1,
 int mbedtls_mpi_div_mpi( mbedtls_mpi *Q, mbedtls_mpi *R, const mbedtls_mpi *A,
                          const mbedtls_mpi *B )
 {
+    printf("%s - %d\n", __FILE__, __LINE__);
     int ret;
     size_t i, n, t, k;
     mbedtls_mpi X, Y, Z, T1, T2;
@@ -1773,7 +1774,9 @@ int mbedtls_mpi_mod_mpi( mbedtls_mpi *R, const mbedtls_mpi *A, const mbedtls_mpi
     if( mbedtls_mpi_cmp_int( B, 0 ) < 0 )
         return( MBEDTLS_ERR_MPI_NEGATIVE_VALUE );
 
+    // printf("%s - %d\n", __FILE__, __LINE__);
     MBEDTLS_MPI_CHK( mbedtls_mpi_div_mpi( NULL, R, A, B ) );
+    // printf("%s - %d\n", __FILE__, __LINE__);
 
     while( mbedtls_mpi_cmp_int( R, 0 ) < 0 )
       MBEDTLS_MPI_CHK( mbedtls_mpi_add_mpi( R, R, B ) );
@@ -1987,6 +1990,7 @@ int mbedtls_mpi_exp_mod( mbedtls_mpi *X, const mbedtls_mpi *A,
     {
         MBEDTLS_MPI_CHK( mbedtls_mpi_lset( &RR, 1 ) );
         MBEDTLS_MPI_CHK( mbedtls_mpi_shift_l( &RR, N->n * 2 * biL ) );
+        printf("%s - %d\n", __FILE__, __LINE__);
         MBEDTLS_MPI_CHK( mbedtls_mpi_mod_mpi( &RR, &RR, N ) );
 
         if( _RR != NULL )

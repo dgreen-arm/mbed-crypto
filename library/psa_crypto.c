@@ -43,6 +43,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "mbedtls/platform.h"
 #if !defined(MBEDTLS_PLATFORM_C)
 #define mbedtls_calloc calloc
@@ -3144,6 +3145,7 @@ static psa_status_t psa_rsa_sign( mbedtls_rsa_context *rsa,
     {
         mbedtls_rsa_set_padding( rsa, MBEDTLS_RSA_PKCS_V15,
                                  MBEDTLS_MD_NONE );
+        printf("%s - %d\n", __FILE__, __LINE__);
         ret = mbedtls_rsa_pkcs1_sign( rsa,
                                       mbedtls_ctr_drbg_random,
                                       &global_data.ctr_drbg,
@@ -3381,6 +3383,7 @@ psa_status_t psa_asymmetric_sign( psa_key_handle_t handle,
 #if defined(MBEDTLS_RSA_C)
     if( slot->attr.type == PSA_KEY_TYPE_RSA_KEY_PAIR )
     {
+        printf("%s - %d\n", __FILE__, __LINE__);
         status = psa_rsa_sign( slot->data.rsa,
                                alg,
                                hash, hash_length,
